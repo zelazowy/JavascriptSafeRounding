@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+    </head>
+    <body>
+        
+        Wartość: <input type="text" id="value" value="1" />
+        Podatek: <input type="text" id="tax" value="0.23" />
+        <div id="result">Wynik: <span></span></div>
+        <div id="rounded-result">w zaokragleniu [.toFixed(2)]: <span></span></div>
+        <div id="rounded-result2">w zaokragleniu [(Math.round((value * (1 + tax) + 0.00001) * 100) / 100)]: <span></span></div>
+        <div id="rounded-result3">
+            w zaokragleniu [custom round function]: <span></span>
+        </div>
+        <div>
+            <p id="lambda">lambda: <span></span></p>
+            <p id="factor">factor: <span></span></p>
+        </div>
+        
+        <script type="text/javascript">
+            var myround = function(variable, precision) {
+                if (precision === undefined) {
+                    precision = 2;
+                } else {
+                    precision = parseInt(precision);
+                }
+                
+                var factor = Math.pow(10, precision),
+                    lambda = Math.pow(10, -(precision + 2));
+            
+                $("#lambda span").text(lambda);
+                $("#factor span").text(factor);
+            
+                return Math.round((variable + lambda) * factor) / factor;
+            };
+            
+            $(document).on('change', '#value, #tax', function() {
+                var value = parseFloat($('#value').val()),
+                    tax = parseFloat($('#tax').val()),
+                    taxval = value * (1 + tax);
+
+                $('#result span').text(value * (1 + tax));
+                $('#rounded-result span').text(taxval.toFixed(2));
+                $('#rounded-result2 span').text(Math.round((taxval + 0.00001) * 100) / 100);
+                $('#rounded-result3 span').text(myround(taxval, 2));
+            });
+        </script>
+        
+    </body>
+</html>
